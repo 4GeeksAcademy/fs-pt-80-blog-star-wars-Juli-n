@@ -8,18 +8,14 @@ const getState = ({ getStore, getActions, setStore }) => {
             favorites: JSON.parse(localStorage.getItem('favorites')) || [] // Cargar desde localStorage
         },
         actions: {
-            // Cargar todos los datos iniciales
             loadInitialData: async () => {
                 try {
-                    // Personajes
                     const peopleResp = await fetch(getStore().url + '/people');
                     const peopleData = await peopleResp.json();
-                    
-                    // Vehículos
+                
                     const vehiclesResp = await fetch(getStore().url + '/vehicles');
                     const vehiclesData = await vehiclesResp.json();
                     
-                    // Planetas
                     const planetsResp = await fetch(getStore().url + '/planets');
                     const planetsData = await planetsResp.json();
 
@@ -33,7 +29,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            // Manejar favoritos
             toggleFavorite: (item) => {
                 const store = getStore();
                 const exists = store.favorites.some(fav => fav.uid === item.uid && fav.type === item.type);
@@ -49,7 +44,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 setStore({ favorites: newFavorites });
             },
 
-            // Cargar detalles individuales
             loadDetails: async (type, uid) => {
                 try {
                     const resp = await fetch(`${getStore().url}/${type}/${uid}`);
