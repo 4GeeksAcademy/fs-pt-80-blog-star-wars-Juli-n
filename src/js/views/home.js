@@ -1,25 +1,47 @@
-import React, {useContext} from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import { PeopleCard } from "../component/peopleCard.jsx";
-import { VehiclesCard } from "../component/vehiclesCard.jsx";
-import { PlanetsCard } from "../component/planetsCard.jsx";
+import { GeneralCard } from "../component/generalCard.jsx";
 
 export const Home = () => {
+	
 	const {store, actions} = useContext(Context);
+	
+	useEffect(()=>{
+		actions.clearSingle();
+	},[])
 
 	return(
-		<div className="text-center mt-5">
-			<div className="row">
-          
-		    {store.people?.map(el => <PeopleCard 
-			key={el.uid}
-			name={el.name}
-			uid={el.uid}
-			img={`https://starwars-visualguide.com/assets/img/characters/${el.uid}.jpg`}
-			/>)}
+	<div className="text-center mt-5">
+		<div className="row">
+		<h2 className="card-hover">People</h2>
 
-			</div>
+		{store.people?.map(person => <GeneralCard 
+		key={person.uid}
+		uid={person.uid}
+		name={person.name}
+		type={'people'}
+		img={`https://starwars-visualguide.com/assets/img/characters/${person.uid}.jpg`}
+		 />)}
+		
+<h2 className="card-hover">Planets</h2>
+{store.planets?.map(planet => <GeneralCard 
+		key={planet.uid}
+		uid={planet.uid}
+		name={planet.name}
+		type={'planets'}
+		img={`https://starwars-visualguide.com/assets/img/planets/${planet.uid}.jpg`}
+		 />)}
+
+<h2 className="card-hover">Vehicles</h2>
+{store.vehicles?.map(vehicle => <GeneralCard 
+		key={vehicle.uid}
+		uid={vehicle.uid}
+		name={vehicle.name}
+		type={'vehicles'}
+		img={`https://starwars-visualguide.com/assets/img/vehicles/${vehicle.uid}.jpg`}
+		 />)}
 
 		</div>
-	)
+	</div>
+);
 }

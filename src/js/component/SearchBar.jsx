@@ -3,7 +3,7 @@ import { Form, InputGroup, Dropdown } from "react-bootstrap";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
-export const SearchBar = () => {
+const SearchBar = () => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const { actions } = useContext(Context);
@@ -66,3 +66,4 @@ export const SearchBar = () => {
         </div>
     );
 };
+export default SearchBar;

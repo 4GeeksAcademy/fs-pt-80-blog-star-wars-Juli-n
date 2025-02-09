@@ -5,7 +5,6 @@ export const Context = React.createContext(null);
 
 const injectContext = PassedComponent => {
 	const StoreWrapper = props => {
-		
 		const [state, setState] = useState(
 			getState({
 				getStore: () => state.store,
@@ -19,7 +18,9 @@ const injectContext = PassedComponent => {
 		);
 
 		useEffect(() => {
-			state.actions.loadCharacters();
+			state.actions.getData('people');
+			state.actions.getData('planets');
+			state.actions.getData('vehicles');
 		}, []);
 
 		return (
@@ -32,3 +33,4 @@ const injectContext = PassedComponent => {
 };
 
 export default injectContext;
+

@@ -1,44 +1,42 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+
 import { Context } from "../store/appContext";
-import { Card, Button, Row, Col, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
-export const Favorites = () => {
-    const { store, actions } = useContext(Context);
-    const navigate = useNavigate();
+import "../../styles/demo.css";
 
-    return (
-        <div className="container mt-4">
-            <h2>Favorites</h2>
-            {store.favorites.length === 0 ? (
-                <Alert variant="info">No favorites yet!</Alert>
-            ) : (
-                <Row>
-                    {store.favorites.map((fav) => (
-                        <Col md={4} key={`${fav.type}-${fav.uid}`} className="mb-3">
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>{fav.name}</Card.Title>
-                                    <div className="d-flex justify-content-between">
-                                        <Button
-                                            variant="primary"
-                                            onClick={() => navigate(`/details/${fav.type}/${fav.uid}`)}
-                                        >
-                                            View Details
-                                        </Button>
-                                        <Button
-                                            variant="danger"
-                                            onClick={() => actions.toggleFavorite(fav)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            )}
-        </div>
-    );
+export const Demo = () => {
+	const { store, actions } = useContext(Context);
+
+	return (
+		<div className="container">
+			<ul className="list-group">
+				{store.demo.map((item, index) => {
+					return (
+						<li
+							key={index}
+							className="list-group-item d-flex justify-content-between"
+							style={{ background: item.background }}>
+							<Link to={"/single/" + index}>
+								<span>Link to: {item.title}</span>
+							</Link>
+							{
+							item.background === "orange" ? (
+								<p style={{ color: item.initial }}>
+									Check store/flux.js scroll to the actions to see the code
+								</p>
+							) : null}
+							<button className="btn btn-success" onClick={() => actions.changeColor(index, "orange")}>
+								Change Color
+							</button>
+						</li>
+					);
+				})}
+			</ul>
+			<br />
+			<Link to="/">
+				<button className="btn btn-primary">Back home</button>
+			</Link>
+		</div>
+	);
 };

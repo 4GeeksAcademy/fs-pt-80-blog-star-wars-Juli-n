@@ -1,61 +1,56 @@
 const getState = ({ getStore, getActions, setStore }) => {
-    return {
-        store: {
-            url: 'https://www.swapi.tech/api',
-            people: [],
-            vehicles: [],
-            planets: [],
-            favorites: JSON.parse(localStorage.getItem('favorites')) || [] // Cargar desde localStorage
-        },
-        actions: {
-            loadInitialData: async () => {
-                try {
-                    const peopleResp = await fetch(getStore().url + '/people');
-                    const peopleData = await peopleResp.json();
-                
-                    const vehiclesResp = await fetch(getStore().url + '/vehicles');
-                    const vehiclesData = await vehiclesResp.json();
-                    
-                    const planetsResp = await fetch(getStore().url + '/planets');
-                    const planetsData = await planetsResp.json();
+	return {
+		store: {
+			url: 'https://www.swapi.tech/api',
+			people: [],
+			single: {},
+			favorites: []
+		},
+		actions: {
+			addRemoveFavorite: (fav) => {
+				const store = getStore();
+				const isFavorite = store.favorites.some(el => el.uid === fav.uid && el.type === fav.type);
+			
+				if (isFavorite) {
+					setStore({
+						favorites: store.favorites.filter(el => !(el.uid === fav.uid && el.type === fav.type))
+					});
+				} else {
+					setStore({
+						favorites: [...store.favorites, fav]
+					});
+				}
+			},
 
-                    setStore({
-                        people: peopleData.results,
-                        vehicles: vehiclesData.results,
-                        planets: planetsData.results
-                    });
-                } catch (error) {
-                    console.error('Error loading initial data:', error);
-                }
-            },
+			getData: async (type) => {
+				try {
+					const store = getStore();
+					const resp = await fetch(store.url+`/${type}`);
+					if (!resp.ok) throw new Error('Error fetching people');
+					const data = await resp.json();
+					setStore({[type]: data.results})
+				} catch (error) {
+					console.error(error);
+				}
+			},
 
-            toggleFavorite: (item) => {
-                const store = getStore();
-                const exists = store.favorites.some(fav => fav.uid === item.uid && fav.type === item.type);
-                
-                let newFavorites;
-                if (exists) {
-                    newFavorites = store.favorites.filter(fav => !(fav.uid === item.uid && fav.type === item.type));
-                } else {
-                    newFavorites = [...store.favorites, item];
-                }
-                
-                localStorage.setItem('favorites', JSON.stringify(newFavorites)); // Persistir en localStorage
-                setStore({ favorites: newFavorites });
-            },
+			getOne: async (type, uid) => {
+				try {
+					const store = getStore();
+					const resp = await fetch(store.url+`/${type}/${uid}`);
+					if (!resp.ok) throw new Error('Error fetching people');
+					const data = await resp.json();
+					setStore({single: data.result})
+				} catch (error) {
+					console.error(error);
+					
+				}
+			},
 
-            loadDetails: async (type, uid) => {
-                try {
-                    const resp = await fetch(`${getStore().url}/${type}/${uid}`);
-                    const data = await resp.json();
-                    return data.result;
-                } catch (error) {
-                    console.error('Error loading details:', error);
-                    return null;
-                }
-            }
-        }
-    };
+			clearSingle: ()=> setStore({single: {}})
+			
+		}
+	};
 };
 
 export default getState;

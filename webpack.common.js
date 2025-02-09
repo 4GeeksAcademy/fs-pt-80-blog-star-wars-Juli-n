@@ -36,7 +36,8 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js']
+    extensions: ['*', '.js', '.jsx'],
+    fallback: {      "path": require.resolve("path-browserify"),      "fs": false,      "os": false,      "crypto": false    }
   },
   plugins: [
     new HtmlWebpackPlugin({
